@@ -19,7 +19,7 @@ client = commands.Bot(command_prefix="$")
 
 custom_commands.set_commands(client)
 if IS_HEROKU:
-    s3 = S3Connection(os.environ['SECRET_TOKEN_KEY'])
+    s3 = S3Connection(os.environ['SECRET_TOKEN'])
     client.run(s3)
 else:
     client.run(env.SECRET_TOKEN)
