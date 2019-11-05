@@ -1,16 +1,13 @@
 import discord
-
-class TestClass(discord.Client):
-
-    async def on_message(self, message):
-        if message.author == self.user:
-            return
-
-        if message.content.startswith(".help"):
-            await message.channel.send("Help menu, no commands availble at the moment")
-
-client = TestClass()
-client.run("NjQwNTc5NjExMjYwMDkyNDc1.Xb76tQ.JMNdIQezzEfkEm81Ap-8Q_Poo9k")
+from discord.ext import commands
+from Scripts import custom_commands
 
 
 # secret token NjQwNTc5NjExMjYwMDkyNDc1.Xb76tQ.JMNdIQezzEfkEm81Ap-8Q_Poo9k
+
+client = commands.Bot(command_prefix="$")
+
+custom_commands.set_commands(client)
+
+client.run("NjQwNTc5NjExMjYwMDkyNDc1.Xb76tQ.JMNdIQezzEfkEm81Ap-8Q_Poo9k")
+
