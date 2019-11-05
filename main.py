@@ -3,7 +3,7 @@ from discord.ext import commands
 from Scripts import custom_commands
 
 
-IS_HEROKU = False
+IS_HEROKU = True
 if IS_HEROKU:
     import os
     from boto.s3.connection import S3Connection
