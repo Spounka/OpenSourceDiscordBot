@@ -28,7 +28,7 @@ def set_commands(bot : commands.Bot):
     @bot.command()
     async def sendImage(ctx):
         # img = discord.File("image.jpg", "meme")
-        await ctx.send(file=discord.File(fp="image.jpg"))
+        await ctx.send(file=discord.File(fp="pictures/empale.jpg"))
     
     @bot.command()
     async def listUsers(ctx):
