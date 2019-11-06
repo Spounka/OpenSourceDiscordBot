@@ -1,14 +1,7 @@
 import discord
 from discord.ext import commands
 from Scripts import custom_commands
-
-
-IS_HEROKU = True
-if IS_HEROKU:
-    import os
-    from boto.s3.connection import S3Connection
-else:
-    import env
+import env
 
 
 
@@ -21,10 +14,5 @@ for i in range(10):
 client = commands.Bot(command_prefix="$")
 
 custom_commands.set_commands(client)
-if IS_HEROKU:
-    s3 = S3Connection(os.environ['SECRET_TOKEN'])
-    print(s3)
-    client.run(s3)
-else:
-    client.run(env.SECRET_TOKEN)
+client.run(env.SECRET_TOKEN)
 
