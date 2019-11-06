@@ -12,6 +12,9 @@ else:
 
 
 
+for i in range(10):
+    print(i)
+
 
 # secret token NjQwNTc5NjExMjYwMDkyNDc1.Xb76tQ.JMNdIQezzEfkEm81Ap-8Q_Poo9k
 
@@ -20,6 +23,7 @@ client = commands.Bot(command_prefix="$")
 custom_commands.set_commands(client)
 if IS_HEROKU:
     s3 = S3Connection(os.environ['SECRET_TOKEN'])
+    print(s3)
     client.run(s3)
 else:
     client.run(env.SECRET_TOKEN)

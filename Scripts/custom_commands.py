@@ -29,3 +29,10 @@ def set_commands(bot : commands.Bot):
     async def sendImage(ctx):
         # img = discord.File("image.jpg", "meme")
         await ctx.send(file=discord.File(fp="image.jpg"))
+    
+    @bot.command()
+    async def listUsers(ctx):
+        for guild in bot.guilds:
+            for member in guild.members:
+                if not (await bot.is_owner(ctx.author)):
+                    await ctx.send(member.name)
