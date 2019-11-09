@@ -56,7 +56,7 @@ class Editing(commands.Cog):
 
     @commands.command(help="Sets your desired departments, you can only have two and cannot change them")
     async def department(self, ctx, department1, department2=None):
-        if len(ctx.author.roles) > 4:
+        if len(ctx.author.roles) > 3:
             await ctx.send("You cannot choose any more departments, already at the limit")
         else:
             for role in get_departments(ctx.author):
