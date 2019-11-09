@@ -139,7 +139,7 @@ def set_commands(bot : commands.Bot):
     async def on_member_join(member):
         member_role = member.guild.get_role(641779701915975710)
         await member.add_roles(member_role)
-        channel = get_default_channel(bot)
+        channel = await get_default_channel(bot)
         roles = get_departments(member)
         await channel.send("Yo")
         await channel.send("Hello {0}, welcome to Open Source C.C\nUse $help to see commands\n Type: $department {1} to join a department"
