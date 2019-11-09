@@ -1,9 +1,31 @@
 import discord
 from discord.ext import commands
 
+
+
+""" *****   Checks   ***** """
+
+async def is_Admin(self, ctx):
+    if (await self.bot.is_owner(ctx.author)):
+        return True
+    for role in ctx.guild.roles:
+        if role.name.lower() == "moderator":
+            return ctx.author.top_role >= role
+
+async def get_default_channel(bot):
+    for guild in bot.guilds:
+        for channel in guild.channels:
+            if channel.name.lower() == "discussion" and channel.category.name.lower() == "general":
+                return channel
+
+def get_departments(member):
+    roles = member.guild.roles
+    roles = roles[1:7]
+    return roles
+
+
 class ChannelCommands(commands.Cog):
     def __init__(self, bot):
-        super(ChannelCommands, self).__init__()
         self.bot = bot
 
     @commands.command(help="lists the all the users in the server")
@@ -13,13 +35,16 @@ class ChannelCommands(commands.Cog):
 
     @commands.command(name="clean", help="cleans the channel messages")
     async def clean_channel(self, ctx):
+        if not await is_Admin(self, ctx):
+            await ctx.send("You Don't have the permission to clean the channel!")
+            return
         messages = []
         async for message in ctx.channel.history(limit=1000):
             messages.append(message)
         async with ctx.channel.typing():
             while True:
                 if len(messages) > 100:
-                    await ctx.channel.delete_messages(messages[:99])
+                    await ctx.channel.delete_messages(messages[:100])
                 else:
                     await ctx.channel.delete_messages(messages[:len(messages)])
                     break
@@ -27,6 +52,28 @@ class ChannelCommands(commands.Cog):
 class Editing(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+
+    @commands.command(help="Sets your desired departments, you can only have two and cannot change them")
+    async def department(self, ctx, department1, department2=None):
+        if len(ctx.author.roles) > 2:
+            await ctx.send("You cannot choose any more departments, already at the limit")
+        else:
+            for role in get_departments(ctx.author):
+                if role.name.lower() == department1.lower():
+                    await ctx.author.add_roles(role)
+                    await ctx.send("Department added Successfully")
+                    if department2 is not None and role.name.lower() == department2.lower() and len(ctx.author.roles) < 2:
+                        await ctx.author.add_roles(role)
+                        await ctx.send("Department added Successfully")
+                    else:
+                        return
+            await ctx.send("Department Not Found")
+            await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
+                
+                
+
+
 
     @commands.command(help="changes your nickname")
     async def setNickname(self, ctx, nickname=None):
@@ -48,6 +95,7 @@ class Editing(commands.Cog):
             return
         else:
             await member.edit(nick=nickname)
+
             
 class Communication(commands.Cog):
     def __init__(self, bot):
@@ -57,18 +105,25 @@ class Communication(commands.Cog):
     async def on_message(self, message):
         if message.author == self.bot.user:
             return
-        if (await self.bot.is_owner(message.author)):
-            if message.content.startswith(".send_announcement"):
-                for guild in self.bot.guilds:
-                    for category in guild.categories:
-                        for channel in category.channels:
-                            if category.name.lower() == "general" and channel.name.lower() == "announcements":
-                                await channel.send("@everyone, an announcement")
-                                await message.delete()
 
+
+            
     @commands.command(help="greets the caller")
     async def greet(self, ctx):
         await ctx.send("Yo")
+
+
+    @commands.command(hidden=True)
+    async def send_announcement(self, ctx, *, msg):
+        if not await is_Admin(self, ctx):
+            return
+        for guild in self.bot.guilds:
+            for category in guild.categories:
+                for channel in category.channels:
+                    if category.name.lower() == "general" and channel.name.lower() == "announcements":
+                        await channel.send("@everyone " + str(msg))
+                        await ctx.message.delete()
+
 
         
     @commands.command(help="sends an image")
@@ -80,6 +135,16 @@ class Communication(commands.Cog):
 
 
 def set_commands(bot : commands.Bot):
+    @bot.event
+    async def on_member_join(member):
+        member_role = member.guild.get_role(641779701915975710)
+        await member.add_roles(member_role)
+        channel = await get_default_channel(bot)
+        roles = await get_departments(member)
+        await channel.send("Yo")
+        await channel.send("Hello {0}, welcome to Open Source C.C\nUse $help to see commands\n Type: $department {1} to join a department"
+                           .format(member.mention, ', '.join([role.name for role in roles])))
+
     bot.add_cog(ChannelCommands(bot))
     bot.add_cog(Editing(bot))
     bot.add_cog(Communication(bot))
