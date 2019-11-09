@@ -63,10 +63,9 @@ class Editing(commands.Cog):
                 if role.name.lower() == department1.lower():
                     await ctx.author.add_roles(role)
                     await ctx.send("Department added Successfully")
-                else:
-                    continue
-            await ctx.send("Department Not Found")
-            await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
+            else:
+                await ctx.send("Department Not Found")
+                await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
                 
                 
 
