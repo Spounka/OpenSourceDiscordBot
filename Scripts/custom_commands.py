@@ -59,14 +59,14 @@ class Editing(commands.Cog):
         if len(ctx.author.roles) > 3:
             await ctx.send("You cannot choose any more departments, already at the limit")
         else:
-            departments = department1.split(", ")
+            departments = map(lambda x: x.lower(), department1.split(", "))
             deps = map(lambda x: x.name.lower(), get_departments(ctx.author))
             
             
             if(len(departments) > 2):
                 await ctx.send("Can enter only two departments !")
             else:
-                if departments[0].lower() in deps:
+                if departments[0] in deps:
                     await ctx.author.add_roles(departments[0])
                     await ctx.send("Department {0} added Successfully".format(departments[0].name))
                 else:
