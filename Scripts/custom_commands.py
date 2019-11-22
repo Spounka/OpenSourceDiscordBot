@@ -70,7 +70,18 @@ class Editing(commands.Cog):
                 
     @commands.command(help="Same as department")
     async def departement(self, ctx, department1):
-        await self.department(department1)
+        if len(ctx.author.roles) > 3:
+            await ctx.send("You cannot choose any more departments, already at the limit")
+        else:
+            for role in get_departments(ctx.author):
+                if role.name.lower() == department1.lower():
+                    await ctx.author.add_roles(role)
+                    await ctx.send("Department added Successfully")
+                    break
+            else:
+                await ctx.send("Department Not Found")
+                await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
+        
 
 
 
