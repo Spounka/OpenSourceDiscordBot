@@ -54,11 +54,9 @@ class Editing(commands.Cog):
         self.bot = bot
 
 
-    @commands.command(help="Sets your desired departments, you can only have two and cannot change them")
-    async def department(self, ctx, *, department1):
+    async def dep_command(self, ctx, department1):
         if len(ctx.author.roles) > 3:
             await ctx.send("You cannot choose any more departments, already at the limit")
-
         else:
             departments = department1.split(", ")
             
@@ -85,41 +83,15 @@ class Editing(commands.Cog):
                     if not dep2:
                         await ctx.send("Department {0} Not Found".format(departments[1]))
                         await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
-
                 
     @commands.command(help="Same as department")
     async def departement(self, ctx, *, department1):
-        if len(ctx.author.roles) > 3:
-            await ctx.send("You cannot choose any more departments, already at the limit")
+        await self.dep_command(ctx, department1)
 
-        else:
-            departments = department1.split(", ")
-            
-            if(len(departments) > 2):
-                await ctx.send("Can enter only two departments !")
-            else:
-                dep1, dep2 = False, False
-                for role in get_departments(ctx.author):
-                    if role.name.lower() == departments[0].lower():
-                        await ctx.author.add_roles(role)
-                        await ctx.send("Department {0} added Successfully".format(departments[0]))
-                        dep1 = True
-
-                    if len(departments) > 1 and departments[1].lower() == role.name.lower():
-                        await ctx.author.add_roles(role)
-                        await ctx.send("Department {0} added Successfully".format(departments[1]))
-                        dep2 = True
-                    if dep1 and dep2:
-                        break
-                else:
-                    if not dep1:
-                        await ctx.send("Department {0} Not Found".format(departments[0]))
-                        await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
-                    if not dep2:
-                        await ctx.send("Department {0} Not Found".format(departments[1]))
-                        await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
+    @commands.command(help="Sets your desired departments, you can only have two and cannot change them")
+    async def department(self, ctx, *, department1):
+        await self.dep_command(ctx, department1)
                 
-
     @commands.command(help="changes your nickname")
     async def setNickname(self, ctx, nickname=None):
         if (await self.bot.is_owner(ctx.author)):
