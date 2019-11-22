@@ -55,33 +55,53 @@ class Editing(commands.Cog):
 
 
     @commands.command(help="Sets your desired departments, you can only have two and cannot change them")
-    async def department(self, ctx, department1):
+    async def department(self, ctx, *, department1):
         if len(ctx.author.roles) > 3:
             await ctx.send("You cannot choose any more departments, already at the limit")
         else:
-            for role in get_departments(ctx.author):
-                if role.name.lower() == department1.lower():
-                    await ctx.author.add_roles(role)
-                    await ctx.send("Department added Successfully")
-                    break
+            departments = department1.split(", ")
+            if(len(departments) > 2):
+                await ctx.send("Can enter only two departments !")
             else:
-                await ctx.send("Department Not Found")
-                await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
+                for role in get_departments(ctx.author):
+                    if role.name.lower() == departments[0].lower():
+                        await ctx.author.add_roles(role)
+                        await ctx.send("Department {0} added Successfully".format(role.name))
+                        if len(departments) == 1:
+                            break
+
+                    if len(departments) > 1 and role.name.lower() == departments[1].lower():
+                        await ctx.author.add_roles(role)
+                        await ctx.send("Department {0} added Successfully".format(role.name))
+                        break
+                else:
+                    await ctx.send("Department Not Found")
+                    await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
                 
     @commands.command(help="Same as department")
-    async def departement(self, ctx, department1):
+    async def departement(self, ctx, *, department1):
         if len(ctx.author.roles) > 3:
             await ctx.send("You cannot choose any more departments, already at the limit")
         else:
-            for role in get_departments(ctx.author):
-                if role.name.lower() == department1.lower():
-                    await ctx.author.add_roles(role)
-                    await ctx.send("Department added Successfully")
-                    break
+            departments = department1.split(", ")
+            if(len(departments) > 2):
+                await ctx.send("Can enter only two departments !")
             else:
-                await ctx.send("Department Not Found")
-                await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
-        
+                for role in get_departments(ctx.author):
+                    if role.name.lower() == departments[0].lower():
+                        await ctx.author.add_roles(role)
+                        await ctx.send("Department {0} added Successfully".format(role.name))
+                        if len(departments) == 1:
+                            break
+
+                    if len(departments) > 1 and role.name.lower() == departments[1].lower():
+                        await ctx.author.add_roles(role)
+                        await ctx.send("Department {0} added Successfully".format(role.name))
+                        break
+                else:
+                    await ctx.send("Department Not Found")
+                    await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
+                
 
 
 
