@@ -68,7 +68,9 @@ class Editing(commands.Cog):
                 await ctx.send("Department Not Found")
                 await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
                 
-                
+    @commands.command(help="Same as department")
+    async def departement(self, ctx, department1):
+        await self.department(department1)
 
 
 
@@ -104,12 +106,6 @@ class Communication(commands.Cog):
             return
 
 
-            
-    @commands.command(help="greets the caller")
-    async def greet(self, ctx):
-        await ctx.send("Yo")
-
-
     @commands.command(hidden=True)
     async def send_announcement(self, ctx, *, msg):
         if not await is_Admin(self, ctx):
@@ -123,10 +119,9 @@ class Communication(commands.Cog):
 
 
         
-    @commands.command(help="sends an image")
+    @commands.command(help="sends an image", hidden=True)
     async def sendImage(self, ctx):
-        await ctx.send(file=discord.File(fp="pictures/empale.jpg"))
-
+        pass
 
 
 
@@ -139,7 +134,7 @@ def set_commands(bot : commands.Bot):
         channel = await get_default_channel(bot)
         roles = get_departments(member)
         await channel.send("Yo")
-        await channel.send("Hello {0}, welcome to Open Source C.C\nUse $help to see commands\n Type: $department {1} to join a department"
+        await channel.send("Hello {0}, welcome to Open Source C.C\nUse $help to see commands\nType: $department {1} to join a department"
                            .format(member.mention, ', '.join([role.name for role in roles])))
 
     bot.add_cog(ChannelCommands(bot))
