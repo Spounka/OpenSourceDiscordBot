@@ -74,7 +74,6 @@ class Editing(commands.Cog):
                     await ctx.send("Available department are:\n" + '\n'.join([dep.name for dep in get_departments(ctx.author)]))
 
                 if len(departments) > 1 and departments[1] in deps:
-                    await ctx.send(departments[0, departments[1]])
                     await ctx.author.add_roles(departments[1])
                     await ctx.send("Department {0} added Successfully".format(departments[1].name))
                 else:
